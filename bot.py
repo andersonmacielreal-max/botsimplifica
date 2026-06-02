@@ -60,5 +60,9 @@ async def registrar(interaction: discord.Interaction, id_usuario: str, status: a
     await interaction.response.send_message(f"✅ Usuário {id_usuario} registrado como **{status.value}**!{mensagem_extra}", ephemeral=True)
 
 # 2. Token de segurança lido da variável de ambiente
+# 2. Token de segurança lido da variável de ambiente
 token = os.environ.get("MTUxMTI5MDkzOTY2OTM1MjU0OA.G_4zON.kPxe2NkSLaMOKuIR46yMUafwljYImUawzqFZYU")
-bot.run(token)
+if not token:
+    print("ERRO: A variável DISCORD_TOKEN não foi encontrada no Railway!")
+else:
+    bot.run(token)
