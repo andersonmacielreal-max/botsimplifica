@@ -8,14 +8,15 @@ st.set_page_config(page_title="Painel Administrativo", layout="wide")
 # --- CONEXÃO SEGURA COM PLANILHA (USANDO SECRETS) ---
 def get_data(aba):
     try:
-        # Acessa as credenciais como dicionário
+        # Acessa o dicionário de credenciais a partir do Streamlit Secrets
+        # O nome 'gcp_service_account' deve coincidir exatamente com o que está no seu painel Secrets
         creds_dict = st.secrets["gcp_service_account"].to_dict()
         
-        # Correção técnica: garante que a chave privada recupere as quebras de linha (\n)
-        # necessárias para o formato PEM do Google
+        # Correção técnica: garante que a chave privada contenha quebras de linha reais
+        # Isso resolve o erro 'Unable to load PEM file' ou 'InvalidData'
         creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
         
-        # Conecta ao Google Sheets
+        # Conecta ao Google Sheets usando as credenciais corrigidas
         gc = gspread.service_account_from_dict(creds_dict)
         sh = gc.open("SistemaAprovacoes")
         worksheet = sh.worksheet(aba)
