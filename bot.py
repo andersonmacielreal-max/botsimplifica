@@ -10,7 +10,7 @@ from datetime import datetime
 creds_json = os.environ.get("GCP_SERVICE_ACCOUNT")
 creds_dict = json.loads(creds_json)
 
-# Conexão com Google Sheets usando dicionário
+# Conexão com Google Sheets
 gc = gspread.service_account_from_dict(creds_dict)
 sh = gc.open("SistemaAprovacoes").sheet1
 
@@ -59,10 +59,10 @@ async def registrar(interaction: discord.Interaction, id_usuario: str, status: a
     # 3. Resposta ao comando
     await interaction.response.send_message(f"✅ Usuário {id_usuario} registrado como **{status.value}**!{mensagem_extra}", ephemeral=True)
 
-# 2. Token de segurança lido da variável de ambiente
-# 2. Token de segurança lido da variável de ambiente
-token = os.environ.get("MTUxMTI5MDkzOTY2OTM1MjU0OA.G_4zON.kPxe2NkSLaMOKuIR46yMUafwljYImUawzqFZYU")
+# 2. Token de segurança: Lê a variável DISCORD_TOKEN definida no Railway
+token = os.environ.get("DISCORD_TOKEN")
+
 if not token:
-    print("ERRO: A variável DISCORD_TOKEN não foi encontrada no Railway!")
+    print("ERRO: A variável DISCORD_TOKEN não foi encontrada no Railway! Configure-a nas variáveis de ambiente.")
 else:
     bot.run(token)
