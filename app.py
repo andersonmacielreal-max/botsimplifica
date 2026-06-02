@@ -8,12 +8,15 @@ st.set_page_config(page_title="Painel Administrativo", layout="wide")
 # --- CONEXÃO SEGURA COM PLANILHA (USANDO SECRETS) ---
 def get_data(aba):
     try:
-        # Lê as credenciais configuradas no painel 'Secrets' do Streamlit Cloud
-        creds = st.secrets["gcp_service_account"]
+        # Acessa as credenciais como dicionário
+        creds_dict = st.secrets["gcp_service_account"].to_dict()
         
-        # Conecta ao Google Sheets usando as credenciais do dicionário
-        gc = gspread.service_account_from_dict(creds)
+        # Correção técnica: garante que a chave privada recupere as quebras de linha (\n)
+        # necessárias para o formato PEM do Google
+        creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
         
+        # Conecta ao Google Sheets
+        gc = gspread.service_account_from_dict(creds_dict)
         sh = gc.open("SistemaAprovacoes")
         worksheet = sh.worksheet(aba)
         dados = worksheet.get_all_records(head=1)
